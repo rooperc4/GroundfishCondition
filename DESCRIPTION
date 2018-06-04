@@ -1,9 +1,9 @@
 Package: GroundfishCondition
-Title: What the Package Does (one line, title case)
+Title: Calculates condition indices for groundfish based on length-weight residuals
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.5.0)
+Authors@R: person("Chris", "Rooper", email = "chris.rooper@noaa.gov", role = c("aut", "cre"))
+Description: This package estimates condition indices for groundfish. The indices are the residuals of the length weight regression. The indices are used to produce condition estimates for inclusion in the ecosystem considerations chapter of the Alaska SAFE documents.
+Depends: R (>= 3.1.0)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

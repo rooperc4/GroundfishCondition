@@ -15,14 +15,14 @@ require(devtools)
 require(ggplot2)
 require(gridExtra)
 library(pander)
-devtools::install_github("rooperc4/Groundfish_Condition")
-library("Groundfish_Condition")
+devtools::install_github("rooperc4/GroundfishCondition")
+library("GroundfishCondition")
 options(width=50, width.cutoff=50, digits = 3) 
 ```
-#PURPOSE
+##PURPOSE
 The purpose of this package is to provide a set of functions and a template for R Markdown documents for the computation of groundfish condition in Alaska for the ecosystem considerations chapter of the SAFE. The functions can also be used to calculate L-W residuals for other purposes. 
 
-#DATA
+##DATA
 The example data sets given here are for the EBS, AI and GOA through the 2017 bottom trawl survey years. However, other surveys that collect similar data (e.g. EcoFOCI surveys, RPA surveys and MACE-AT surveys) can use these functions as well. The r markdown script was prepared by E. Siddon and the functions and package compiled by C. Rooper. A more detailed description of the analyses and ecological relevance can be found in a draft manuscript (Boldt, Rooper and Hoff, in prep, that should be completed in late 2018).
 
 The example data set included in this package is called lwdata and is specimen data (length and weight specimens) for all species where this data was collected on RACE bottom trawl surveys. The data was initially extracted from RACEBASE tables (including HAUL, SPECIMEN, SPECIES and STRATA tables). Other sources of data work fine as well, the key points are to have individual lengths and weights, a species identifier, a strata identifier (if you want some sort of by-area calculations) and a year. Here is what the RACEBASE data look like.
@@ -35,7 +35,7 @@ lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
 pander::pandoc.table(lwdata[1:6,])
 ```
 
-#FUNCTIONS
+##FUNCTIONS
 The key function for this analysis is the calculation of residuals from a log-log relationship between length and weight the lw.resids function inputs the length and weight data for individual fish and estimates the residuals.
 
 ```{r}
@@ -47,7 +47,7 @@ lw.resids<-function(length,weight){
 return(lw.res)}
 ```
 
-#EXAMPLE
+##EXAMPLE
 As an example of calculating the condition index, we take Pacific Cod in the eastern Bering Sea. The code is designed to loop through a number of species (e.g. see the EBS_Groundfish_COndition.Rmd file which computes the index for a group of species used in the Ecosystem Considerations SAFE Chapter). For this example, we are doing only a single species, but have left the architecture for multiple species intact. Also, please note that some of the steps such as the STRATUM definitions are specific to the RACEBASE EBS data and may not be needed for other applications.
 
 
@@ -98,16 +98,17 @@ myplot[[pltName]]<-p} #Add the plot to the list and loop
 
 ```
 
-This line of code does the arranging of the plots on a grid. In this case we have a single species (Pacific cod), so the number of columns (ncol) is set to 1. For the Ecosystem Considerations contributions there are usually 2 columns (ncol=2). It also outputs the figure as a .png to the working directory.
+This line of code does the arranging of the plots on a grid. In this case we have a single species (Pacific cod), so the number of columns (ncol) is set to 1. For the Ecosystem Considerations contributions there are usually 2 columns (ncol=2). It also outputs the figure as a .png to the working directory and outputs the data to a .csv file.
 
 ```{r figure 2 grid, include=TRUE, echo=FALSE, fig.height=7, fig.width=6, message=FALSE, warning=FALSE}
 png("EBSbyyear.png",width=6,height=7,units="in",res=300)
 grid.arrange(grobs=myplot,ncol=1)
 dev.off()
 grid.arrange(grobs=myplot,ncol=1)
+write.csv(lwdata_by_year,"lwdata_by_year.csv",row.names=FALSE)
 ```
 
-In this next bit of code, the same procedures are followed for calculating the residuals and producing plots. This time the plots are by strata and year. 
+In this next bit of code, the same procedures are followed for calculating the residuals and producing plots. This time the plots are by strata and year. Plots and data are output at the end.
 
 ```{r figure 3 set up, include=TRUE, fig.height=7, fig.width=6, message=FALSE, warning=FALSE}
 
@@ -131,16 +132,14 @@ p2<-ggplot() +
 	geom_bar(data = dat1, aes(x=yrs, y=ymeans, fill=factor(strata)),stat = "identity",col="black") +
     geom_bar(data = dat2, aes(x=yrs, y=ymeans, fill=factor(strata)),stat = "identity",col="black")+
  scale_fill_brewer(palette = "Spectral")+
-	geom_hline(yintercept=0, color="black")+ guides(fill=FALSE)+
+	geom_hline(yintercept=0, color="black")+
  xlim(1996.5, 2017.5)+
 theme_bw() +
 	theme(axis.text.x = element_text(size=8))+
 theme(axis.text.y = element_text(size=8))+
 theme(axis.title.x = element_text(size=8))+
 theme(axis.title.y = element_text(size=8))+
-theme(legend.title = element_text(size=8))+
-theme(legend.text = element_text(size=8))+
-  theme(panel.grid.major = element_blank())+
+  theme(panel.grid.major = element_blank())+theme(legend.position="right")+
  labs(title = paste(EBS.speciesnames[i]), y = "Length-weight residual", x = "Year", fill = "Stratum")
 #print(p2)
 pltName <- paste( EBS.speciesnames[i],"plot", sep = '' )
@@ -150,7 +149,16 @@ png("bystrata.png",width=6,height=7,units="in",res=300)
 grid.arrange(grobs=myplot,ncol=1)
 dev.off()
 grid.arrange(grobs=myplot,ncol=1)
+write.csv(lwdata_by_strata,"lwdata_by_strata.csv",row.names=FALSE)
 ```
 
-#GROUNFISH CONDITION INDICES FOR ALASKA ESR
-There are 3 r markdown scripts included in this package that can be used to produce the groundfish condition indices for the annual updates to the ecosystem contributions section of the SAFE documents. They are called GOA_GroundfishCondition.rmd, EBS_GroundfishCondition.rmd and AI_GroundfishCondition.rmd. These rmarkdown scripts are based on E. Siddon's conversion of the original R script and will create a word document and associated figures. It should only be necessary to update the length-weight data from RACEBASE and then the r markdown text (to reflect any new trends or results).
+##GROUNDFISH CONDITION INDICES FOR ALASKA ESR
+There are 3 r markdown scripts included in this package that can be used to produce the groundfish condition indices for the annual updates to the ecosystem contributions section of the SAFE documents. They are:
+
+GOA_GroundfishCondition.rmd
+
+EBS_GroundfishCondition.rmd 
+
+AI_GroundfishCondition.rmd 
+
+These rmarkdown scripts are based on E. Siddon's conversion of the original R script and will create a word document and associated figures. It should only be necessary to update the length-weight data from RACEBASE and then the r markdown text (to reflect any new trends or results).
