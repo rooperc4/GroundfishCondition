@@ -110,7 +110,7 @@ write.csv(lwdata_by_year,"lwdata_by_year.csv",row.names=FALSE)
 
 In this next bit of code, the same procedures are followed for calculating the residuals and producing plots. This time the plots are by strata and year. Plots and data are output at the end.
 
-```{r figure 3 set up, include=TRUE, fig.height=7, fig.width=6, message=FALSE, warning=FALSE}
+```{r figure 3 option A set up, include=TRUE, fig.height=7, fig.width=6, message=FALSE, warning=FALSE}
 
 lwdata_by_strata<-array(dim=c(0,7))
 colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse")
@@ -149,6 +149,56 @@ png("bystrata.png",width=6,height=7,units="in",res=300)
 grid.arrange(grobs=myplot,ncol=1)
 dev.off()
 grid.arrange(grobs=myplot,ncol=1)
+write.csv(lwdata_by_strata,"lwdata_by_strata.csv",row.names=FALSE)
+```
+
+Here are the plots are by strata and year with individual plots for each strata (for J. Ianelli). Plots and data are output at the end.
+
+```{r figure 3 option B set up, include=TRUE, fig.height=7, fig.width=6, message=FALSE, warning=FALSE}
+
+lwdata_by_strata<-array(dim=c(0,7))
+colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse")
+myplot<-list() 
+#By stratum graphs
+for(i in 1:length(EBS.species)){
+	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
+
+ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
+ysd=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
+yn=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),length)
+yse=ysd$x/sqrt(yn$x)
+data.summary<-data.frame(species=EBS.species[i],strata=ymeans$Group.2,yrs=ymeans$Group.1,ymeans=ymeans$x,yn=yn$x,ysd=ysd$x,yse=yse)
+lwdata_by_strata<-rbind(lwdata_by_strata,data.summary)
+
+ustrata<-unique(data.summary$strata)
+for(j in 1:length(ustrata)){
+  dat1<-subset(data.summary,data.summary$strata==ustrata[j])
+  signymeans<-sign(dat1$ymeans)*(-.6)
+p2<-ggplot(data=dat1,aes(x=yrs,y=ymeans,fill=factor(strata))) +
+	geom_bar(position=position_dodge(),stat = "identity",col="black") +
+#  geom_bar(position = position_dodge(), stat="identity", fill="cornflowerblue",col="black") + 
+  geom_errorbar(aes(ymin=ymeans-yse, ymax=ymeans+yse),width=0.30)+
+   geom_text(data=dat1,aes(x=yrs,y=sign(ymeans)*(abs(ymeans)+yse),label=yn),vjust=signymeans,size=1.5) +
+  #    geom_bar(data = dat2, aes(x=yrs, y=ymeans, fill=factor(strata)),stat = "identity",col="black")+
+ scale_fill_brewer(palette = "Spectral")+
+	geom_hline(yintercept=0, color="black")+
+ xlim(1996.5, 2017.5)+
+theme_bw() +
+	theme(axis.text.x = element_text(size=8))+
+theme(axis.text.y = element_text(size=8))+
+theme(axis.title.x = element_text(size=8))+
+theme(axis.title.y = element_text(size=8))+
+  theme(panel.grid.major = element_blank())+theme(legend.position="none")+
+ labs(title = paste(EBS.speciesnames[i]," - stratum ",ustrata[j],sep=""), y = "Length-weight residual", x = "Year", fill = "Stratum")
+pltName <- paste( EBS.speciesnames[i],ustrata[j],"plot", sep = '' )
+myplot[[pltName]]<-p2}
+
+png(paste(EBS.speciesnames[i],"bystrata.png",sep="_"),width=6,height=7,units="in",res=300)
+grid.arrange(grobs=myplot,ncol=2)
+dev.off()
+grid.arrange(grobs=myplot,ncol=2)}
+
 write.csv(lwdata_by_strata,"lwdata_by_strata.csv",row.names=FALSE)
 ```
 
