@@ -4,6 +4,7 @@
 #' and then calculates a residual.
 #' @param length Set of individual fish lengths
 #' @param weight Corresponding set of individual fish weights
+#' @param outlier.rm Should outliers be removed using Bonferoni test (cutoff = 0.7)
 #' @keywords length, weight, groundfish condition
 #' @export
 #' @examples
