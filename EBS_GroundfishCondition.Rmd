@@ -9,18 +9,17 @@ library(knitr)
 library(ggplot2)
 library(gridExtra)
 library(GroundfishCondition)
-data("lwdata")
-lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
-head(lwdata)
-
+#data("lwdata")
+#lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
+#head(lwdata)
 ```
 
 ## Eastern Bering Sea Groundfish Condition
-Contributed by Jennifer Boldt^1^, Chris Rooper^2^ , and Jerry Hoff^2^   
+Contributed by Jennifer Boldt^1^, Chris Rooper^1^ , and Jerry Hoff^2^   
 ^1^ Fisheries and Oceans Canada, Pacific Biological Station, 3190 Hammond Bay Rd, Nanaimo, BC, Canada V9T 6N7  
 ^2^ Resource Assessment and Conservation Engineering Division, Alaska Fisheries Science Center, National Marine Fisheries Service, NOAA  
-**Contact**: chris.rooper@noaa.gov  
-**Last updated**:  October 2017
+**Contact**: chris.rooper@dfo-mpo.gc.ca  
+**Last updated**:  October 2018
 
 **Description of Indicator**: Length-weight residuals are an indicator of somatic growth (Brodeur et al. 2004) and, therefore, a measure of fish condition. Fish condition is an indicator of how heavy a fish is per unit body length, and may be an indicator of ecosystem productivity. Positive length-weight residuals indicate fish are in better condition (i.e., heavier per unit length); whereas, negative residuals indicate fish are in poorer condition (i.e., lighter per unit length). Fish condition may affect fish growth and subsequent survival (Paul 1997, Boldt and Haldorson 2004).
 
@@ -30,27 +29,34 @@ include_graphics("MapEBS.png")
 
 The AFSC eastern Bering Sea shelf bottom trawl survey data was utilized to acquire lengths and weights of individual fish for walleye pollock, Pacific cod, arrowtooth flounder, yellowfin sole, flathead sole, northern rock sole, and Alaska plaice. Only summer standard survey strata and stations were included in analyses, no corner stations were included (Figure 1). Survey strata 31 and 32 were combined as stratum 30; strata 61 and 62 were combined as stratum 60; strata 41, 42, and 43 were combined as stratum 40. Strata 82 and 90 were excluded from analyses because they are not standard survey strata. 
 
-Length-weight relationships for each of the seven species were estimated with a linear regression of log-transformed values over all years where data was available (during 1982-2013). Additionally, length-weight relationships for age 1+ walleye pollock (length from 100-250 mm) were also calculated independent from the adult life history stages. Predicted log-transformed weights were calculated and subtracted from measured log-transformed weights to calculate residuals for each fish.  Length-weight residuals were averaged for the entire EBS and for the 6 strata sampled in the standard summer survey. Temporal and spatial patterns in residuals were examined.  
+Length-weight relationships for each of the seven species were estimated with a linear regression of log-transformed values over all years where data was available (during 1982-2018). Additionally, length-weight relationships for age 1+ walleye pollock (length from 100-250 mm) were also calculated independent from the adult life history stages. Predicted log-transformed weights were calculated and subtracted from measured log-transformed weights to calculate residuals for each fish. Outliers were removed using a Bonferroni outlier test (with a cutoff test statistic of 0.7 for removal).  Length-weight residuals were averaged for the entire EBS and for the 6 strata sampled in the standard summer survey. Temporal and spatial patterns in residuals were examined.  
 
-**Status and Trends**: Length-weight residuals have varied over time for all species with a few notable patterns (Figure 2). Residuals for all species where there was data were negative in 1999, a cold year in the Bering Sea. Residuals became positive or more positive in 2002 for five of the seven species examined. Flatfish residuals were generally positive from 2002 to 2004 or 2005 depending on species. Age 1 Walleye Pollock and Pacific cod residuals were positive from 2001 to 2004 or 2005. In 2008, all species except flathead sole and walleye pollock had negative residuals. There has been a distinct negative trend in Pacific cod since a peak value in 2003. Condition of walleye pollock older than age 1 in 2017 was the second lowest on record. Age 1 walleye Pollock and older walleye Pollock were not well correlated in most years. Length-weight residuals for all species were less in 2017 than in 2016 indicating poorer condition in the most recent year (arrowtooth flounder was the only exception).
+**Status and Trends**: Length-weight residuals have varied over time for all species with a few notable patterns (Figure 2). Residuals for all species where there was data were negative in 1999, a cold year in the Bering Sea. Residuals became positive or more positive in 2002 for five of the seven species examined. Flatfish residuals were generally positive from 2002 to 2004 or 2005 depending on species. Age 1 Walleye Pollock and Pacific cod residuals were positive from 2001 to 2004 or 2005. In 2008, all species except flathead sole and walleye pollock had negative residuals. There has been a distinct negative trend in Pacific cod since a peak value in 2003. Condition of walleye pollock older than age 1 in 2018 was the second lowest on record and continued a decreasing trend. Age 1 walleye Pollock and older walleye Pollock were not well correlated in most years. Length-weight residuals for most species increased or were the same from 2017 to 2018. The exceptions were Walleye pollock and Alaska plaice which had lower condition in 2018 relative to 2017. 
 
 ```{r figure 2 set up, include=FALSE, fig.height=4, fig.width=4,message=FALSE, warning=FALSE}
 ##EBS Calculations and figures
 EBS.species<-c(21740,21741,21720,10261,10210,10110,10285,10130)
 EBS.speciesnames<-c("Walleye pollock","Age 1 Walleye Pollock","Pacific cod","Northern rock sole","Yellowfin sole","Arrowtooth flounder","Alaska plaice","Flathead sole")
 EBS.lwdata<-subset(lwdata,lwdata["REGION"]=="BS")
+EBS.lwdata<-subset(EBS.lwdata,EBS.lwdata["STRATUM"]>9&EBS.lwdata["STRATUM"]<100)
+ebsstrata<-EBS.lwdata$STRATUM
 EBS.lwdata["STRATUM"]<-round(EBS.lwdata["STRATUM"],digits=-1)
-EBS.lwdata<-subset(EBS.lwdata,EBS.lwdata["STRATUM"]<=60&EBS.lwdata["STRATUM"]>0)
-p<-substr(EBS.lwdata[,"STATIONID"],2,2)
+EBS.lwdata$STRATUM[ebsstrata==71|ebsstrata==70|ebsstrata==81]<-"NBS"
+#p<-substr(EBS.lwdata[,"STATIONID"],2,2)
 #p<-strtrim(EBS.lwdata[,"STATIONID"],2)
-EBS.lwdata<-subset(EBS.lwdata,p=="-")
+#EBS.lwdata<-subset(EBS.lwdata,p=="-")
 EBS.lwdata$SPECIES_CODE<-ifelse(EBS.lwdata$SPECIES_CODE==21740&EBS.lwdata$LENGTH<250&EBS.lwdata$LENGTH>=100, 21741, EBS.lwdata$SPECIES_CODE)
 myplot<-list()
+myplot2<-list()
 lwdata_by_year<-array(dim=c(0,6))
 colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(EBS.species)){
 	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
+	tempdata<-subset(tempdata,tempdata$WEIGHT>0)
 	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE)
+  tempdata.nbs<-subset(tempdata,tempdata$STRATUM=="NBS"&tempdata$YEAR>2009)
+  tempdata<-subset(tempdata,tempdata$STRATUM!="NBS")
 	yrs=sort(unique(tempdata$YEAR))
 	ymeans=tapply(tempdata$residuals,tempdata$YEAR,mean)
 	yn=tapply(tempdata$residuals,tempdata$YEAR,length)
@@ -61,7 +67,7 @@ for(i in 1:length(EBS.species)){
 p<-ggplot(data.summary, aes(x = yrs, y = ymeans),cex=2) +  
   geom_bar(position = position_dodge(), stat="identity", fill="cornflowerblue",col="black") + 
   geom_errorbar(aes(ymin=ymeans-yse, ymax=ymeans+yse),width=0.30) +
- xlim(1996.5, 2017.5)+
+ xlim(1996.5, 2018.5)+
  ggtitle(paste(EBS.speciesnames[i])) + 
 	geom_hline(yintercept=0, color="black")+
   theme_bw() +
@@ -73,12 +79,39 @@ theme(axis.title.y = element_text(size=8))+
 labs(title = paste(EBS.speciesnames[i]), y = "Length-weight residual", x = "Year")
 print(p)
 pltName <- paste( EBS.speciesnames[i],"plot", sep = '' )
-myplot[[pltName]]<-p}
+myplot[[pltName]]<-p
+
+
+yrs=sort(unique(tempdata.nbs$YEAR))
+	ymeans=tapply(tempdata.nbs$residuals,tempdata.nbs$YEAR,mean)
+	yn=tapply(tempdata.nbs$residuals,tempdata.nbs$YEAR,length)
+	ysd=tapply(tempdata.nbs$residuals,tempdata.nbs$YEAR,sd)
+	yse=ysd/sqrt(yn)
+	data.summary<-data.frame(yrs,ymeans,yn,ysd,yse)
+	lwdata_by_year<-rbind(lwdata_by_year,data.summary)
+p<-ggplot(data.summary, aes(x = yrs, y = ymeans),cex=2) +  
+  geom_bar(position = position_dodge(), stat="identity", fill="cornflowerblue",col="black") + 
+  geom_errorbar(aes(ymin=ymeans-yse, ymax=ymeans+yse),width=0.30) +
+ xlim(1996.5, 2018.5)+
+ ggtitle(paste(EBS.speciesnames[i])) + 
+	geom_hline(yintercept=0, color="black")+
+  theme_bw() +
+  theme(panel.grid.major = element_blank())+
+	theme(axis.text.x = element_text(size=8))+
+theme(axis.text.y = element_text(size=8))+
+theme(axis.title.x = element_text(size=8))+
+theme(axis.title.y = element_text(size=8))+
+labs(title = paste(EBS.speciesnames[i]), y = "Length-weight residual", x = "Year")
+print(p)
+pltName <- paste( EBS.speciesnames[i],"plot", sep = '' )
+myplot2[[pltName]]<-p}
+
 
 ```
 
 ```{r figure 2 grid, include=TRUE, echo=FALSE, fig.height=14,fig.width=12,fig.cap="\\label{fig:figs}Figure 2. Length-weight residuals for seven Eastern Bering Sea groundfish sampled in the NMFS standard summer bottom trawl survey, 1997-2017.",  message=FALSE, warning=FALSE}
 grid.arrange(grobs=myplot,ncol=2)
+grid.arrange(grobs=myplot2[1:3],ncol=2)
 ```
 
 ```{r figure 2 grid png, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
@@ -86,6 +119,10 @@ png("EBSbyyear.png",width=6,height=7,units="in",res=300)
 grid.arrange(grobs=myplot,ncol=2)
 dev.off()
 write.csv(lwdata_by_year,"EBS_lwdata_by_year.csv",row.names=FALSE)
+png("NEBSbyyear.png",width=6,height=7,units="in",res=300)
+grid.arrange(grobs=myplot2[1:3],ncol=2)
+dev.off()
+write.csv(lwdata_by_year,"NEBS_lwdata_by_year.csv",row.names=FALSE)
 ```
 
 Spatial trends in residuals were also apparent for some species. Generally, fish were in better condition on the outer shelf (strata 50 and 60; Figure 3). For all species except yellowfin sole (which did not occur in outer shelf strata), residuals were almost always positive on the northern outer shelf (stratum 60; Figure 3). For yellowfin sole, residuals were positive in the outermost shelf strata in which they occurred (stratum 40) except in 1999. In addition to having positive residuals on the outer shelf, gadids tended to have negative residuals on the inner shelf (Figure 3). Pollock residuals were generally positive in strata 50 and 60 and negative in strata 10, 20, and 40. Cod residuals were generally positive in stratum 60 and negative in strata 10 and 20. Spatial patterns in flatfish residuals were also apparent but varied among species.  Alaska plaice residuals were almost always negative in stratum 40. Flathead sole residuals were often positive in strata 40 (Figure 2).   
@@ -99,8 +136,9 @@ Other factors that could affect length-weight residuals include survey sampling 
 lwdata_by_strata<-array(dim=c(0,7))
 colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(EBS.species)){
-	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
+	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i]&EBS.lwdata$STRATUM!="NBS")
 	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE)	
 	yrs=sort(unique(tempdata$YEAR))
 ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
 ysd=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
@@ -116,7 +154,7 @@ p2<-ggplot() +
     geom_bar(data = dat2, aes(x=yrs, y=ymeans, fill=factor(strata)),stat = "identity",col="black")+
  scale_fill_brewer(palette = "Spectral")+
 	geom_hline(yintercept=0, color="black")+
- xlim(1996.5, 2017.5)+
+ xlim(1996.5, 2018.5)+
 theme_bw() +
 	theme(axis.text.x = element_text(size=8))+
 theme(axis.text.y = element_text(size=8))+
@@ -127,7 +165,7 @@ theme(legend.text = element_text(size=8))+
   theme(panel.grid.major = element_blank())+
  labs(title = paste(EBS.speciesnames[i]), y = "Length-weight residual", x = "Year", fill = "Stratum")
 if(i==1){
-    p2<-p2+theme(legend.position=c(.07,.65))+theme(legend.title = element_text("Stratum"))+theme(legend.text = element_text(size = 8))}
+    p2<-p2+theme(legend.position=c(.07,.5))+theme(legend.title = element_text("Stratum"))+theme(legend.text = element_text(size = 8))}
 if(i!=1){p2<-p2+theme(legend.position="none")}
 pltName <- paste( EBS.speciesnames[i],"plot", sep = '' )
 myplot[[pltName]]<-p2}
@@ -145,6 +183,5 @@ dev.off()
 write.csv(lwdata_by_strata,"EBS_lwdata_by_strata.csv",row.names=FALSE)
 ```
 
-**Implications**: A fishes condition may have implications for its survival. For example, in Prince William Sound, the condition of herring prior to the winter may in part determine their survival (Paul and Paul 1999). The condition of Bering Sea groundfish, may therefore partially contribute to their survival and recruitment. In the future, as years are added to the time series, the relationship between length-weight residuals and subsequent survival can be examined further. It is likely, however, that the relationship is more complex than a simple correlation. Also important to consider is the fact that condition of all sizes of fish were examined and used to predict survival. Perhaps, it would be better to examine the condition of juvenile fish, not yet recruited to the fishery, or the condition of adult fish and correlations with survival. This work has not yet been done for the 2017 bottom trawl survey data, but we are preparing a manuscript describing the juvenile-adult condition correlation and further splitting of juvenile and adult fishes and anticipate including it in the 2018 ecosystem contributions.
+**Implications**: A fishes condition may have implications for its survival. For example, in Prince William Sound, the condition of herring prior to the winter may in part determine their survival (Paul and Paul 1999). The condition of Bering Sea groundfish, may therefore partially contribute to their survival and recruitment. In the future, as years are added to the time series, the relationship between length-weight residuals and subsequent survival can be examined further. It is likely, however, that the relationship is more complex than a simple correlation. Also important to consider is the fact that condition of all sizes of fish were examined and used to predict survival. Perhaps, it would be better to examine the condition of juvenile fish, not yet recruited to the fishery, or the condition of adult fish and correlations with survival. 
 
-The reduced condition for all species in 2017 compared to 2016 is a potential cause for concern and may be a leading indicator of poor overwinter survival and the potential for smaller stocks in 2018. It should be noted anecdotally that the commercial fishery was finding pollock in poorer condition during the summer season as well. 

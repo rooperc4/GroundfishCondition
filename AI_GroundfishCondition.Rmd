@@ -9,18 +9,18 @@ library(knitr)
 library(ggplot2)
 library(gridExtra)
 library(GroundfishCondition)
-data("lwdata")
-lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
-head(lwdata)
+#data("lwdata")
+#lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
+#head(lwdata)
 
 ```
 
 ## Aleutian Islands Groundfish Condition
-Contributed by Jennifer Boldt^1^, Chris Rooper^2^ , and Jerry Hoff^2^   
+Contributed by Jennifer Boldt^1^, Chris Rooper^1^ , and Jerry Hoff^2^   
 ^1^ Fisheries and Oceans Canada, Pacific Biological Station, 3190 Hammond Bay Rd, Nanaimo, BC, Canada V9T 6N7  
 ^2^ Resource Assessment and Conservation Engineering Division, Alaska Fisheries Science Center, National Marine Fisheries Service, NOAA  
-**Contact**: chris.rooper@noaa.gov  
-**Last updated**:  October 2017
+**Contact**: chris.rooper@dfo-mpo.gc.ca  
+**Last updated**:  October 2018
 
 **Description of Indicator**: Length-weight residuals are an indicator of somatic growth (Brodeur et al. 2004) and, therefore, a measure of fish condition. Fish condition is an indicator of how heavy a fish is per unit body length, and may be an indicator of ecosystem productivity. Positive length-weight residuals indicate fish are in better condition (i.e., heavier per unit length); whereas, negative residuals indicate fish are in poorer condition (i.e., lighter per unit length). Fish condition may affect fish growth and subsequent survival (Paul 1997, Boldt and Haldorson 2004).
 
@@ -28,9 +28,9 @@ Contributed by Jennifer Boldt^1^, Chris Rooper^2^ , and Jerry Hoff^2^
 include_graphics("MapAI.png") 
 ```
 
-The AFSC Aleutian Islands bottom trawl survey data was utilized to acquire lengths and weights of individual fish for walleye pollock, Pacific cod, arrowtooth flounder, southern rock sole, Atka mackerel, northern rockfish, and Pacific ocean perch.  Only standard survey stations were included in analyses.  Data were combined by INPFC area; Southern Bering sea, Eastern Aleutian Islands, Central Aleutian Islands, and Western Aleutian Islands (Figure 1). Length-weight relationships for each of the seven species were estimated with a linear regression of log-transformed values over all years where data was available (during 1984-2016). Additionally, length-weight relationships for age 1+ walleye pollock (length from 100-250 mm) were also calculated independent from the adult life history stage. Predicted log-transformed weights were calculated and subtracted from measured log-transformed weights to calculate residuals for each fish.  Length-weight residuals were averaged for the entire AI and for the 3 INPFC areas sampled in the standard summer survey.  Temporal and spatial patterns in residuals were examined.  
+The AFSC Aleutian Islands bottom trawl survey data was utilized to acquire lengths and weights of individual fish for walleye pollock, Pacific cod, arrowtooth flounder, southern rock sole, Atka mackerel, northern rockfish, and Pacific ocean perch.  Only standard survey stations were included in analyses.  Data were combined by INPFC area; Southern Bering sea, Eastern Aleutian Islands, Central Aleutian Islands, and Western Aleutian Islands (Figure 1). Length-weight relationships for each of the seven species were estimated with a linear regression of log-transformed values over all years where data was available (during 1984-2018). Additionally, length-weight relationships for age 1+ walleye pollock (length from 100-250 mm) were also calculated independent from the adult life history stage. Predicted log-transformed weights were calculated and subtracted from measured log-transformed weights to calculate residuals for each fish. Outliers were removed using a Bonferroni outlier test (with a cutoff test statistic of 0.7 for removal). Length-weight residuals were averaged for the entire AI and for the 3 INPFC areas sampled in the standard summer survey.  Temporal and spatial patterns in residuals were examined.  
 
-**Status and Trends**: Length-weight residuals varied over time for all species with a few notable patterns (Figure 2).  Residuals for most species where there was data were negative from 2000 to 2006.  Residuals were positive for all species but southern rock sole in 2010. In 2012-2016 length-weight residuals were negative across most species and the trendline has been negative since 2010.. For northern rockfish, Pacific cod and Pacific ocean perch there has been a declining trend in residuals over the years covered by the survey. 
+**Status and Trends**: Length-weight residuals varied over time for all species with a few notable patterns (Figure 2).  Residuals for most species where there was data were negative from 2000 to 2006.  Residuals were positive for all species but southern rock sole in 2010. In 2012-2016 length-weight residuals were negative across most species and the trendline has been negative since 2010. For northern rockfish, Pacific cod and Pacific ocean perch there has been a declining trend in residuals over the years covered by the survey and condition in the last four surveys has been particularly negative. 
 
 
 
@@ -48,7 +48,8 @@ lwdata_by_year<-array(dim=c(0,6))
 colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(AI.species)){ #set up the loop to loop through species
 	tempdata<-subset(AI.lwdata,AI.lwdata$SPECIES_CODE==AI.species[i]) #subset the data to the species of interest
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT) # Use the lw.resids function to calculate the residuals
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,TRUE)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE) 
 	yrs=sort(unique(tempdata$YEAR)) #Sort by year
 	ymeans=tapply(tempdata$residuals,tempdata$YEAR,mean) #Calculate mean by year
 	yn=tapply(tempdata$residuals,tempdata$YEAR,length) #Count the number of observations by year
@@ -60,7 +61,7 @@ lwdata_by_year<-rbind(lwdata_by_year,data.summary)
 p<-ggplot(data.summary, aes(x = yrs, y = ymeans)) +  
   geom_bar(position = position_dodge(), stat="identity", fill="cornflowerblue",col="black", width=1) + 
   geom_errorbar(aes(ymin=ymeans-yse, ymax=ymeans+yse),width=0.30) +
- xlim(1984.5, 2016.5)+
+ xlim(1984.5, 2018.5)+
  ggtitle(paste(AI.speciesnames[i])) + 
 	geom_hline(yintercept=0, color="black")+
   theme_bw() +
@@ -100,7 +101,8 @@ lwdata_by_strata<-array(dim=c(0,7))
 colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(AI.species)){
 	tempdata<-subset(AI.lwdata,AI.lwdata$SPECIES_CODE==AI.species[i])
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,TRUE)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE)
 	yrs=sort(unique(tempdata$YEAR))
 	
 ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$INPFC_AREA),mean)
@@ -117,7 +119,7 @@ p<-ggplot() +
     geom_bar(data = dat2, aes(x=yrs, y=ymeans, fill=factor(strata)),stat = "identity",col="black",width=1)+
  scale_fill_brewer(palette = "Spectral",breaks=c("Southern Bering Sea","Eastern Aleutians","Central Aleutians","Western Aleutians"))+
 	geom_hline(yintercept=0, color="black")+
- xlim(1984.5, 2016.5)+
+ xlim(1984.5, 2018.5)+
 theme_bw() +
 	theme(axis.text.x = element_text(size=8))+
 theme(axis.text.y = element_text(size=8))+
