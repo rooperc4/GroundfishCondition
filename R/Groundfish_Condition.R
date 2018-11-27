@@ -24,9 +24,9 @@ lw.resids<-function(length,weight,catch=1, outlier.rm=FALSE){
   #Assessing Outliers using Bonferoni Outlier Test
   #Identify if there are any outliers in your data that exceed cutoff = 0.05 (default)
   if(outlier.rm==TRUE){
-  outlierTest(lw.res,n.max=Inf)
+  #outlierTest(lw.res,n.max=Inf)
     #QQ residual plot with SD's 
-  qqPlot(lw.res, main="QQ Plot") #qq plot for studentized resid
+ # qqPlot(lw.res, main="QQ Plot") #qq plot for studentized resid
   #Produce a bonferoni value for each point in your data
   test1<-outlierTest(lw.res,n.max=Inf,cutoff=Inf,order=FALSE)$bonf.p 
   remove<-which(test1<.7)
