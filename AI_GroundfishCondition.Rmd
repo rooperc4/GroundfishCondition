@@ -42,13 +42,14 @@ AI.lwdata<-subset(lwdata,lwdata["REGION"]=="AI")
 AI.lwdata<-subset(AI.lwdata,AI.lwdata$YEAR>1984&AI.lwdata$YEAR!=1989)
 AI.lwdata$SPECIES_CODE<-ifelse(AI.lwdata$SPECIES_CODE==21740&AI.lwdata$LENGTH<250&AI.lwdata$LENGTH>=100, 21741, AI.lwdata$SPECIES_CODE)
 AI.lwdata<-subset(AI.lwdata,AI.lwdata["INPFC_AREA"]!="")
+AI.lwdata$YEAR<-round(AI.lwdata$CRUISE/100,0)
 
 myplot<-list()
 lwdata_by_year<-array(dim=c(0,6))
 colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(AI.species)){ #set up the loop to loop through species
 	tempdata<-subset(AI.lwdata,AI.lwdata$SPECIES_CODE==AI.species[i]) #subset the data to the species of interest
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,TRUE)
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,catch=1,outlier.rm=TRUE)
 	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE) 
 	yrs=sort(unique(tempdata$YEAR)) #Sort by year
 	ymeans=tapply(tempdata$residuals,tempdata$YEAR,mean) #Calculate mean by year
@@ -101,7 +102,7 @@ lwdata_by_strata<-array(dim=c(0,7))
 colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(AI.species)){
 	tempdata<-subset(AI.lwdata,AI.lwdata$SPECIES_CODE==AI.species[i])
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,TRUE)
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,1,T$U)
 	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE)
 	yrs=sort(unique(tempdata$YEAR))
 	
