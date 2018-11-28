@@ -35,6 +35,14 @@ lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
 pander::pandoc.table(lwdata[1:6,])
 ```
 
+```{r}
+
+data("catch_data")
+#create a year variable from the cruise data
+catch_data["YEAR"]<-round(catch_data["CRUISE"]/100,digits=1)
+pander::pandoc.table(catch_data[1:6,])
+```
+
 ##FUNCTIONS
 The key function for this analysis is the calculation of residuals from a log-log relationship between length and weight the lw.resids function inputs the length and weight data for individual fish and estimates the residuals.
 
@@ -46,6 +54,8 @@ lw.resids<-function(length,weight){
 	lw.res<-lw.res$residuals
 return(lw.res)}
 ```
+There is also a function to weight the residuals with the catch at the trawl survey station and there is some additional functionality that allows you to automatically detect and remove outliers.
+
 
 ##EXAMPLE
 As an example of calculating the condition index, we take Pacific Cod in the eastern Bering Sea. The code is designed to loop through a number of species (e.g. see the EBS_Groundfish_COndition.Rmd file which computes the index for a group of species used in the Ecosystem Considerations SAFE Chapter). For this example, we are doing only a single species, but have left the architecture for multiple species intact. Also, please note that some of the steps such as the STRATUM definitions are specific to the RACEBASE EBS data and may not be needed for other applications.
@@ -71,11 +81,13 @@ lwdata_by_year<-array(dim=c(0,6))
 colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(EBS.species)){ #set up the loop to loop through species
 	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i]) #subset the data to the species of interest
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT) # Use the lw.resids function to calculate the residuals
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,outlier.rm=TRUE) # Use the lw.resids function to calculate the residuals
+	tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
 	yrs=sort(unique(tempdata$YEAR)) #Sort by year
-	ymeans=tapply(tempdata$residuals,tempdata$YEAR,mean) #Calculate mean by year
-	yn=tapply(tempdata$residuals,tempdata$YEAR,length) #Count the number of observations by year
-	ysd=tapply(tempdata$residuals,tempdata$YEAR,sd) #Calculate the sd of the mean by year
+	ymeans=tapply(tempdata$residuals.wt,tempdata$YEAR,mean) #Calculate mean by year
+	yn=tapply(tempdata$residuals.wt,tempdata$YEAR,length) #Count the number of observations by year
+	ysd=tapply(tempdata$residuals.wt,tempdata$YEAR,sd) #Calculate the sd of the mean by year
 	yse=ysd/sqrt(yn) #Calculate the standard error
 	data.summary<-data.frame(EBS.species[i],yrs,ymeans,yn,ysd,yse) #Put the mean, SE and year into a data frame for plotting
 lwdata_by_year<-rbind(lwdata_by_year,data.summary)	
@@ -117,11 +129,12 @@ colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse"
 #By stratum graphs
 for(i in 1:length(EBS.species)){
 	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
-
-ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
-ysd=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
-yn=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),length)
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT, outlier.rm=TRUE)
+	tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
+ymeans=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
+ysd=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
+yn=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),length)
 yse=ysd$x/sqrt(yn$x)
 data.summary<-data.frame(species=EBS.species[i],strata=ymeans$Group.2,yrs=ymeans$Group.1,ymeans=ymeans$x,yn=yn$x,ysd=ysd$x,yse=yse)
 lwdata_by_strata<-rbind(lwdata_by_strata,data.summary)
@@ -162,11 +175,12 @@ myplot<-list()
 #By stratum graphs
 for(i in 1:length(EBS.species)){
 	tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
-
-ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
-ysd=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
-yn=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),length)
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT, outlier.rm=TRUE)
+	tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
+ymeans=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
+ysd=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
+yn=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),length)
 yse=ysd$x/sqrt(yn$x)
 data.summary<-data.frame(species=EBS.species[i],strata=ymeans$Group.2,yrs=ymeans$Group.1,ymeans=ymeans$x,yn=yn$x,ysd=ysd$x,yse=yse)
 lwdata_by_strata<-rbind(lwdata_by_strata,data.summary)

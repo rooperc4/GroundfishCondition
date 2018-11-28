@@ -30,6 +30,7 @@ tables (including HAUL, SPECIMEN, SPECIES and STRATA tables).}
   \item{SEX}{Sex of specimen; male = 1, female = 2, unknown = 3}
   \item{LENGTH}{Specimen length in mm}
   \item{WEIGHT}{Specimen weigth in g}
+  \item{CATCH}{Catch-per-unit-effort in kg/ha}
   ...
 }}
 \source{

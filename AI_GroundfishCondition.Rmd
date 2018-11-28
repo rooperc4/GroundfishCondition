@@ -50,7 +50,7 @@ colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(AI.species)){ #set up the loop to loop through species
 	tempdata<-subset(AI.lwdata,AI.lwdata$SPECIES_CODE==AI.species[i]) #subset the data to the species of interest
 	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,outlier.rm=TRUE)
-	tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$BOTTOM_DEPTH)
+	tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
 	tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
 	yrs=sort(unique(tempdata$YEAR)) #Sort by year
 	ymeans=tapply(tempdata$residuals.wt,tempdata$YEAR,mean) #Calculate mean by year
