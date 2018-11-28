@@ -49,12 +49,13 @@ lwdata_by_year<-array(dim=c(0,6))
 colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(AI.species)){ #set up the loop to loop through species
 	tempdata<-subset(AI.lwdata,AI.lwdata$SPECIES_CODE==AI.species[i]) #subset the data to the species of interest
-	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,catch=1,outlier.rm=TRUE)
-	tempdata<-subset(tempdata,is.na(tempdata$residuals)==FALSE) 
+	tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,outlier.rm=TRUE)
+	tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$BOTTOM_DEPTH)
+	tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
 	yrs=sort(unique(tempdata$YEAR)) #Sort by year
-	ymeans=tapply(tempdata$residuals,tempdata$YEAR,mean) #Calculate mean by year
-	yn=tapply(tempdata$residuals,tempdata$YEAR,length) #Count the number of observations by year
-	ysd=tapply(tempdata$residuals,tempdata$YEAR,sd) #Calculate the sd of the mean by year
+	ymeans=tapply(tempdata$residuals.wt,tempdata$YEAR,mean) #Calculate mean by year
+	yn=tapply(tempdata$residuals.wt,tempdata$YEAR,length) #Count the number of observations by year
+	ysd=tapply(tempdata$residuals.wt,tempdata$YEAR,sd) #Calculate the sd of the mean by year
 	yse=ysd/sqrt(yn) #Calculate the standard error
 	data.summary<-data.frame(AI.species[i],yrs,ymeans,yn,ysd,yse) #Put the mean, SE and year into a data frame for plotting
 lwdata_by_year<-rbind(lwdata_by_year,data.summary)
