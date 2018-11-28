@@ -4,7 +4,6 @@
 #' and then calculates a residual.
 #' @param length Set of individual fish lengths
 #' @param weight Corresponding set of individual fish weights
-#' @param catch Catch for weighting condition calculation
 #' @param outlier.rm Should outliers be removed using Bonferoni test (cutoff = 0.7)
 #' @keywords length, weight, groundfish condition
 #' @export
@@ -45,10 +44,9 @@ lw.resids<-function(length,weight,outlier.rm=FALSE){
 #' This function weights length-weight residuals by a catch column. This
 #' catch can be CPUE from the tow where the fish was caught (most common) or
 #' stratum CPUE or biomass. 
-#' @param length Set of individual fish lengths
-#' @param weight Corresponding set of individual fish weights
-#' @param catch Catch for weighting condition calculation
-#' @param outlier.rm Should outliers be removed using Bonferoni test (cutoff = 0.7)
+#' @param year Year of sample must be the same length as the residuals
+#' @param residual Residual that will be weighted by catch
+#' @param catch Catch for weighting residual (default = 1) must be the same length as residuals
 #' @keywords length, weight, groundfish condition
 #' @export
 #' @examples

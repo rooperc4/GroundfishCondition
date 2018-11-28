@@ -4,19 +4,21 @@
 \alias{lw.resids}
 \title{A function to compute length-weight residuals}
 \usage{
-lw.resids(length, weight)
+lw.resids(length, weight, outlier.rm = FALSE)
 }
 \arguments{
 \item{length}{Set of individual fish lengths}
 
 \item{weight}{Corresponding set of individual fish weights}
+
+\item{outlier.rm}{Should outliers be removed using Bonferoni test (cutoff = 0.7)}
 }
 \description{
 This function makes a log-log regression of length and weight for individual fish
 and then calculates a residual.
 }
 \examples{
-hab_equation()
+lw.resids()
 }
 \keyword{condition}
 \keyword{groundfish}
