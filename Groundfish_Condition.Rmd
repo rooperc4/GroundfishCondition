@@ -2,7 +2,7 @@
 title: |-
   Condition indices calculated for groundfish species from length-weight residuals
 author: "Chris Rooper, Ebbet Siddon, Jennifer Boldt, Jerry Hoff"
-date: "June 4, 2018"
+date: "November 28, 2018"
 output: github_document
 output_file: "README.md"
 ---
@@ -35,18 +35,10 @@ lwdata["YEAR"]<-round(lwdata["CRUISE"]/100,digits=1)
 pander::pandoc.table(lwdata[1:6,])
 ```
 
-```{r}
-
-data("catch_data")
-#create a year variable from the cruise data
-catch_data["YEAR"]<-round(catch_data["CRUISE"]/100,digits=1)
-pander::pandoc.table(catch_data[1:6,])
-```
-
 ##FUNCTIONS
 The key function for this analysis is the calculation of residuals from a log-log relationship between length and weight the lw.resids function inputs the length and weight data for individual fish and estimates the residuals.
 
-```{r}
+```{r, eval=FALSE}
 lw.resids<-function(length,weight){
 	loglength<-log(length)
 	logwt<-log(weight)

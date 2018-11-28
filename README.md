@@ -1,7 +1,7 @@
 Condition indices calculated for groundfish species from length-weight residuals
 ================
 Chris Rooper, Ebbet Siddon, Jennifer Boldt, Jerry Hoff
-June 4, 2018
+November 28, 2018
 
 PURPOSE
 -------
@@ -23,79 +23,78 @@ pander::pandoc.table(lwdata[1:6,])
 ```
 
     ## 
-    ## -----------------------------------------------------------------------------
-    ##  REGION   CRUISE   VESSEL   HAUL       START_TIME       INPFC_AREA   STRATUM 
-    ## -------- -------- -------- ------ -------------------- ------------ ---------
-    ##   GOA     200501    143      1     5/21/2005 15:34:16    Shumagin      210   
-    ## 
-    ##   GOA     200501    143      1     5/21/2005 15:34:16    Shumagin      210   
-    ## 
-    ##   GOA     200501    143      1     5/21/2005 15:34:16    Shumagin      210   
-    ## 
-    ##   GOA     200501    143      1     5/21/2005 15:34:16    Shumagin      210   
-    ## 
-    ##   GOA     200501    143      2     5/21/2005 18:51:09    Shumagin      10    
-    ## 
-    ##   GOA     200501    143      2     5/21/2005 18:51:09    Shumagin      10    
-    ## -----------------------------------------------------------------------------
-    ## 
-    ## Table: Table continues below
-    ## 
-    ##  
-    ## --------------------------------------------------------------------------
-    ##  STATIONID   BOTTOM_DEPTH   START_LATITUDE   START_LONGITUDE   SPECIMENID 
-    ## ----------- -------------- ---------------- ----------------- ------------
-    ##     3-6          219            52.56            -169.8            3      
-    ## 
-    ##     3-6          219            52.56            -169.8            8      
-    ## 
-    ##     3-6          219            52.56            -169.8            3      
-    ## 
-    ##     3-6          219            52.56            -169.8            5      
-    ## 
-    ##     3-8           82            52.64            -169.8            29     
-    ## 
-    ##     3-8           82            52.64            -169.8            30     
-    ## --------------------------------------------------------------------------
-    ## 
-    ## Table: Table continues below
-    ## 
-    ##  
     ## ------------------------------------------------------------------------------
-    ##  SPECIES_CODE          SPECIES_NAME                  COMMON_NAME          SEX 
-    ## -------------- ----------------------------- --------------------------- -----
-    ##     21921       Pleurogrammus monopterygius         Atka mackerel          1  
+    ##  &nbsp;    HAUL   VESSEL   CRUISE   SPECIES_CODE   REGION      START_TIME     
+    ## --------- ------ -------- -------- -------------- -------- -------------------
+    ##  **827**    1       88     200101      21720         BS     5/31/2001 6:34:55 
     ## 
-    ##     21921       Pleurogrammus monopterygius         Atka mackerel          2  
+    ##  **828**    1       88     200101      21720         BS     5/31/2001 6:34:55 
     ## 
-    ##     30050                                     rougheye and blackspotted    2  
-    ##                                                    rockfish unid.             
+    ##  **829**    1       88     200101      21720         BS     5/31/2001 6:34:55 
     ## 
-    ##     30060             Sebastes alutus            Pacific ocean perch       1  
+    ##  **830**    1       88     200101      21720         BS     5/31/2001 6:34:55 
     ## 
-    ##     21921       Pleurogrammus monopterygius         Atka mackerel          2  
+    ##  **831**    1       88     200101      21720         BS     5/31/2001 6:34:55 
     ## 
-    ##     21921       Pleurogrammus monopterygius         Atka mackerel          2  
+    ##  **832**    1       88     200101      21720         BS     5/31/2001 6:34:55 
     ## ------------------------------------------------------------------------------
     ## 
     ## Table: Table continues below
     ## 
     ##  
-    ## ------------------------
-    ##  LENGTH   WEIGHT   YEAR 
-    ## -------- -------- ------
-    ##   390      822     2005 
+    ## ----------------------------------------------------------------------------
+    ##  &nbsp;    INPFC_AREA   STRATUM   STATIONID   BOTTOM_DEPTH   START_LATITUDE 
+    ## --------- ------------ --------- ----------- -------------- ----------------
+    ##  **827**                  10        F-14           36            56.67      
     ## 
-    ##   380      660     2005 
+    ##  **828**                  10        F-14           36            56.67      
     ## 
-    ##   210      120     2005 
+    ##  **829**                  10        F-14           36            56.67      
     ## 
-    ##   320      500     2005 
+    ##  **830**                  10        F-14           36            56.67      
     ## 
-    ##   350      626     2005 
+    ##  **831**                  10        F-14           36            56.67      
     ## 
-    ##   410      740     2005 
-    ## ------------------------
+    ##  **832**                  10        F-14           36            56.67      
+    ## ----------------------------------------------------------------------------
+    ## 
+    ## Table: Table continues below
+    ## 
+    ##  
+    ## ----------------------------------------------------------------------------
+    ##  &nbsp;    START_LONGITUDE   SPECIMENID      SPECIES_NAME       COMMON_NAME 
+    ## --------- ----------------- ------------ --------------------- -------------
+    ##  **827**       -159.7            14       Gadus macrocephalus   Pacific cod 
+    ## 
+    ##  **828**       -159.7            7        Gadus macrocephalus   Pacific cod 
+    ## 
+    ##  **829**       -159.7            2        Gadus macrocephalus   Pacific cod 
+    ## 
+    ##  **830**       -159.7            5        Gadus macrocephalus   Pacific cod 
+    ## 
+    ##  **831**       -159.7            3        Gadus macrocephalus   Pacific cod 
+    ## 
+    ##  **832**       -159.7            9        Gadus macrocephalus   Pacific cod 
+    ## ----------------------------------------------------------------------------
+    ## 
+    ## Table: Table continues below
+    ## 
+    ##  
+    ## ------------------------------------------------
+    ##  &nbsp;    SEX   LENGTH   WEIGHT   CATCH   YEAR 
+    ## --------- ----- -------- -------- ------- ------
+    ##  **827**    2     310      252     24.34   2001 
+    ## 
+    ##  **828**    1     170       40     24.34   2001 
+    ## 
+    ##  **829**    1     210       82     24.34   2001 
+    ## 
+    ##  **830**    1     220       98     24.34   2001 
+    ## 
+    ##  **831**    1     200       66     24.34   2001 
+    ## 
+    ##  **832**    1     370      482     24.34   2001 
+    ## ------------------------------------------------
 
 FUNCTIONS
 ---------
@@ -111,6 +110,8 @@ lw.resids<-function(length,weight){
 return(lw.res)}
 ```
 
+There is also a function to weight the residuals with the catch at the trawl survey station and there is some additional functionality that allows you to automatically detect and remove outliers.
+
 EXAMPLE
 -------
 
@@ -125,11 +126,13 @@ lwdata_by_year<-array(dim=c(0,6))
 colnames(lwdata_by_year)<-c("species","yrs","ymeans","yn","ysd","yse")
 for(i in 1:length(EBS.species)){ #set up the loop to loop through species
     tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i]) #subset the data to the species of interest
-    tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT) # Use the lw.resids function to calculate the residuals
+    tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT,outlier.rm=TRUE) # Use the lw.resids function to calculate the residuals
+    tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
+    tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
     yrs=sort(unique(tempdata$YEAR)) #Sort by year
-    ymeans=tapply(tempdata$residuals,tempdata$YEAR,mean) #Calculate mean by year
-    yn=tapply(tempdata$residuals,tempdata$YEAR,length) #Count the number of observations by year
-    ysd=tapply(tempdata$residuals,tempdata$YEAR,sd) #Calculate the sd of the mean by year
+    ymeans=tapply(tempdata$residuals.wt,tempdata$YEAR,mean) #Calculate mean by year
+    yn=tapply(tempdata$residuals.wt,tempdata$YEAR,length) #Count the number of observations by year
+    ysd=tapply(tempdata$residuals.wt,tempdata$YEAR,sd) #Calculate the sd of the mean by year
     yse=ysd/sqrt(yn) #Calculate the standard error
     data.summary<-data.frame(EBS.species[i],yrs,ymeans,yn,ysd,yse) #Put the mean, SE and year into a data frame for plotting
 lwdata_by_year<-rbind(lwdata_by_year,data.summary)  
@@ -151,6 +154,19 @@ pltName <- paste( EBS.speciesnames[i],"plot", sep = '' ) #Name the plot
 myplot[[pltName]]<-p} #Add the plot to the list and loop
 ```
 
+    ## Loading required package: car
+
+    ## Loading required package: carData
+
+    ## [1] "Outlier rows removed"
+    ##  [1]    26   213   936   940  1100  1111  1124
+    ##  [8]  1166  1492  1610  2564  2747  3847  3994
+    ## [15]  4125  4859  5169  5874  6128  6212  6446
+    ## [22]  6836  7293  7932  8089  8097  8447  8452
+    ## [29]  8456  8725 10428 10644 10945 12697 12956
+    ## [36] 13868 13999 14314 15470 15967 16536 18084
+    ## [43] 18108 18703 18998 20476 20634 21072
+
 This line of code does the arranging of the plots on a grid. In this case we have a single species (Pacific cod), so the number of columns (ncol) is set to 1. For the Ecosystem Considerations contributions there are usually 2 columns (ncol=2). It also outputs the figure as a .png to the working directory and outputs the data to a .csv file.
 
     ## png 
@@ -166,11 +182,12 @@ colnames(lwdata_by_strata)<-c("species","strata","yrs","ymeans","yn","ysd","yse"
 #By stratum graphs
 for(i in 1:length(EBS.species)){
     tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
-    tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
-
-ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
-ysd=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
-yn=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),length)
+    tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT, outlier.rm=TRUE)
+    tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
+    tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
+ymeans=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
+ysd=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
+yn=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),length)
 yse=ysd$x/sqrt(yn$x)
 data.summary<-data.frame(species=EBS.species[i],strata=ymeans$Group.2,yrs=ymeans$Group.1,ymeans=ymeans$x,yn=yn$x,ysd=ysd$x,yse=yse)
 lwdata_by_strata<-rbind(lwdata_by_strata,data.summary)
@@ -193,7 +210,18 @@ theme(axis.title.y = element_text(size=8))+
 #print(p2)
 pltName <- paste( EBS.speciesnames[i],"plot", sep = '' )
 myplot[[pltName]]<-p2}
+```
 
+    ## [1] "Outlier rows removed"
+    ##  [1]    26   213   936   940  1100  1111  1124
+    ##  [8]  1166  1492  1610  2564  2747  3847  3994
+    ## [15]  4125  4859  5169  5874  6128  6212  6446
+    ## [22]  6836  7293  7932  8089  8097  8447  8452
+    ## [29]  8456  8725 10428 10644 10945 12697 12956
+    ## [36] 13868 13999 14314 15470 15967 16536 18084
+    ## [43] 18108 18703 18998 20476 20634 21072
+
+``` r
 png("bystrata.png",width=6,height=7,units="in",res=300)
 grid.arrange(grobs=myplot,ncol=1)
 dev.off()
@@ -221,11 +249,12 @@ myplot<-list()
 #By stratum graphs
 for(i in 1:length(EBS.species)){
     tempdata<-subset(EBS.lwdata,EBS.lwdata$SPECIES_CODE==EBS.species[i])
-    tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT)
-
-ymeans=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
-ysd=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
-yn=aggregate(tempdata$residuals,by=list(tempdata$YEAR,tempdata$STRATUM),length)
+    tempdata["residuals"]<-lw.resids(tempdata$LENGTH,tempdata$WEIGHT, outlier.rm=TRUE)
+    tempdata["residuals.wt"]<-weighted_resids(tempdata$YEAR,tempdata$residuals,tempdata$CATCH)
+    tempdata<-subset(tempdata,is.na(tempdata$residuals.wt)==FALSE) 
+ymeans=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),mean)
+ysd=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),sd)
+yn=aggregate(tempdata$residuals.wt,by=list(tempdata$YEAR,tempdata$STRATUM),length)
 yse=ysd$x/sqrt(yn$x)
 data.summary<-data.frame(species=EBS.species[i],strata=ymeans$Group.2,yrs=ymeans$Group.1,ymeans=ymeans$x,yn=yn$x,ysd=ysd$x,yse=yse)
 lwdata_by_strata<-rbind(lwdata_by_strata,data.summary)
@@ -258,6 +287,15 @@ grid.arrange(grobs=myplot,ncol=2)
 dev.off()
 grid.arrange(grobs=myplot,ncol=2)}
 ```
+
+    ## [1] "Outlier rows removed"
+    ##  [1]    26   213   936   940  1100  1111  1124
+    ##  [8]  1166  1492  1610  2564  2747  3847  3994
+    ## [15]  4125  4859  5169  5874  6128  6212  6446
+    ## [22]  6836  7293  7932  8089  8097  8447  8452
+    ## [29]  8456  8725 10428 10644 10945 12697 12956
+    ## [36] 13868 13999 14314 15470 15967 16536 18084
+    ## [43] 18108 18703 18998 20476 20634 21072
 
 ![](Groundfish_Condition_files/figure-markdown_github/figure%203%20option%20B%20set%20up-1.png)
 
